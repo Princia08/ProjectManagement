@@ -1,0 +1,136 @@
+@model ReportMeeting.Models.Project
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h3>Project : @Html.DisplayFor(model => model.name)</h3>
+
+<div class="row" style="margin-bottom:7%;">
+    <div class="e-table">
+        <div class="table-responsive table-lg mt-3">
+            <table class="table mt-1 mb-4 table-bordered table-sm">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Name</th>
+                        <th>Details</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Platform</th>
+                        <th>Architect</th>
+                        <th>Jira Link</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(model => model.name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.details)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.startDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.dueDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.platform.name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.architect.name)
+                        </td>
+                        <td>
+                            <a href="https://id.atlassian.com/login?continue=https%3A%2F%2Fid.atlassian.com%2Fjoin%2Fuser-access%3Fresource%3Dari%253Acloud%253Ajira%253A%253Asite%252Fd37da56d-c7f6-4fe8-8ffe-9c086f1ddd89%26continue%3Dhttps%253A%252F%252Faxiangroup.atlassian.net%252Fjira%252Fsoftware%252Fprojects%252FMP%252Fboards%252F29%253Ftext%253Dcnap&application=jira"
+                            >@Html.DisplayFor(model => model.jiraLink)</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+         </div>
+    </div>
+    <h4 style="color:darkblue">Tasks for this project</h4>
+
+    <div class="e-table">
+        <div class="table-responsive table-lg mt-3">
+                <table class="table table-bordered table-md">
+                    <thead class="thead-dark">
+                        <tr>
+                        <th>Task Name</th>
+                        <th>Details</th>
+                        <th>File</th>
+                        <th>Start Date</th>
+                        <th>Due Date</th>
+                        <th>Assignee</th>
+                        <th>Status</th>
+                        <th>Blocking Points</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (ViewData["tasks"] is IEnumerable<ReportMeeting.Models.Task> tasks)
+                    {
+                        @foreach (var task in tasks)
+                        {
+                            <tr>
+                                <td>@task.name</td>
+                                <td>@task.details</td>
+
+                                <td>
+                                @if(task.files != null)
+                                {
+                                    <i class="fas fa-file"></i>
+                                }
+                                </td>
+
+                                <td>@task.startDate</td>
+                                <td>@task.dueDate</td>
+                                <td>@task.assignee.name</td>
+                                <td>
+                                    @switch (task.status)
+                                    {
+                                        case "In Progress":
+                                            <span class="badge badge-primary">@task.status</span>
+                                            break;
+                                        case "Pending":
+                                            <span class="badge badge-warning">@task.status</span>
+                                            break;
+                                        case "Stand By":
+                                            <span class="badge badge-dark">@task.status</span>
+                                            break;
+                                        case "Not Started":
+                                            <span class="badge badge-danger">@task.status</span>
+                                            break;
+                                        case "Done":
+                                            <span class="badge badge-success">@task.status</span>
+                                            break;
+                                        default:
+                                            <span class="badge badge-secondary">@task.status</span>
+                                            // Default case for other statuses
+                                            break;
+                                    }
+                                </td>
+                                <td>@task.blockingPoint</td>
+                                <td>
+                                    @if (@task.status != "Done" && @task.assigneeId == ViewBag.User?.id)
+                                    {
+                                        <button class="btn btn-primary btn-sm">Complete</button>
+                                    }
+                                    @if (@task.status == "Done")
+                                    {
+                                        <button class="btn btn-primary btn-sm" disabled style="font-size:12px;">Completed</button>
+                                    }
+                                </td>
+                                </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div>
+        <a asp-action="Index" class="btn btn-light">< Back to List</a>
+    </div>
+</div>

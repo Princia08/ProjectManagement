@@ -1,9 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using ReportMeeting.Data;
+using ReportMeeting.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ReportingAppContext")));
+
+builder.Services.AddScoped<TaskService>();
 
 builder.Services.AddRazorPages();
 

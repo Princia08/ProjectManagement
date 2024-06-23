@@ -13,28 +13,28 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="name" class="control-label"></label>
+                <label class="control-label">Name</label>
                 <input asp-for="name" class="form-control" />
                 <span asp-validation-for="name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="email" class="control-label"></label>
+                <label class="control-label">Email Address</label>
                 <input asp-for="email" class="form-control" />
                 <span asp-validation-for="email" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="password" class="control-label"></label>
-                <input asp-for="password" class="form-control" />
+                <label class="control-label">Password</label>
+                <input asp-for="password" type="password" class="form-control" />
                 <span asp-validation-for="password" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="phoneNumber" class="control-label"></label>
+                <label class="control-label">Phone Number</label>
                 <input asp-for="phoneNumber" class="form-control" />
                 <span asp-validation-for="phoneNumber" class="text-danger"></span>
             </div>
 
             <div class="form-group mb-4">
-                <label asp-for="roleId" class="control-label"></label>
+                <label class="control-label">Role</label>
 
                 <select asp-for="roleId" class="form-control" class="form-select" aria-label="Choose role">
                     @if (ViewData["roles"] is IEnumerable<ReportMeeting.Models.Role> roles)

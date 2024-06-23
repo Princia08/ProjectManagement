@@ -1,8 +1,8 @@
 ﻿namespace ReportMeeting.Models
 {
-    public class TypeReport
+    public class Platform
     {
         public int id { get; set; }
-        public string type { get; set; }
+        public string name { get; set; }
     }
 }

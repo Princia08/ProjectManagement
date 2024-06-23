@@ -22,7 +22,7 @@ namespace ReportMeeting.Controllers
         // GET: Role
         public async Task<IActionResult> Index()
         {
-            return View(await _context.role.ToListAsync());
+            return View(await _context.Role.ToListAsync());
         }
 
         // GET: Role/Details/5
@@ -33,7 +33,7 @@ namespace ReportMeeting.Controllers
                 return NotFound();
             }
 
-            var role = await _context.role
+            var role = await _context.Role
                 .FirstOrDefaultAsync(m => m.id == id);
             if (role == null)
             {
@@ -73,7 +73,7 @@ namespace ReportMeeting.Controllers
                 return NotFound();
             }
 
-            var role = await _context.role.FindAsync(id);
+            var role = await _context.Role.FindAsync(id);
             if (role == null)
             {
                 return NotFound();
@@ -124,7 +124,7 @@ namespace ReportMeeting.Controllers
                 return NotFound();
             }
 
-            var role = await _context.role
+            var role = await _context.Role
                 .FirstOrDefaultAsync(m => m.id == id);
             if (role == null)
             {
@@ -139,10 +139,10 @@ namespace ReportMeeting.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var role = await _context.role.FindAsync(id);
+            var role = await _context.Role.FindAsync(id);
             if (role != null)
             {
-                _context.role.Remove(role);
+                _context.Role.Remove(role);
             }
 
             await _context.SaveChangesAsync();
@@ -151,7 +151,7 @@ namespace ReportMeeting.Controllers
 
         private bool RoleExists(int id)
         {
-            return _context.role.Any(e => e.id == id);
+            return _context.Role.Any(e => e.id == id);
         }
     }
 }
