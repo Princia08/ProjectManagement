@@ -1,18 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using ReportMeeting.Data;
 using ReportMeeting.Services;
+using Rotativa.AspNetCore;
+using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ReportingAppContext")));
-
 builder.Services.AddScoped<TaskService>();
-
 builder.Services.AddRazorPages();
-
-// Add services to the container.
 builder.Services.AddControllersWithViews();
-
 
 // Add session services
 builder.Services.AddSession(options =>
@@ -40,6 +37,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
+app.UseRotativa();
 
 app.MapControllerRoute(
     name: "default",
