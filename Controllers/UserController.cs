@@ -158,7 +158,7 @@ namespace ReportMeeting.Controllers
         [HttpPost]
         public async Task<IActionResult> Authentificate([Bind("email,password")] Users user)
         {
-            var userFound = await _context.Users.Where(u => u.email == user.email && u.password == user.password).FirstOrDefaultAsync();
+            var userFound = await _context.Users.Where(u => u.email == user.email && u.password == user.password).Include(u => u.role).FirstOrDefaultAsync();
             if (userFound == null)
             {
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
