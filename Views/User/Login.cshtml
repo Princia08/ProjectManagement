@@ -1,0 +1,29 @@
+﻿@model ReportMeeting.Models.Users
+
+<div class="container">
+    <div class="row justify-content-around">
+        <div class="col-md-4">
+            <h3>Login</h3>
+            <form asp-action="Authentificate">
+                <div class="mb-3">
+                    <label for="mail" class="form-label">E-mail Adress</label>
+                    <input type="mail" class="form-control" asp-for="email">
+                    <span asp-validation-for="email" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" asp-for="password">
+                    <span asp-validation-for="password" class="text-danger"></span>
+                </div>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
