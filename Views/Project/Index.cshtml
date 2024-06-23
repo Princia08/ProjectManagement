@@ -2,94 +2,101 @@
 
 @{
     ViewData["Title"] = "Projects List";
+    var isAdmin = ViewBag.User.roleId == 4;
 }
 
-<h1>Projects List</h1>
+<h3 class="mb-4" style="color:darkblue;">List of all projects and its tasks</h3>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Details</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Platform</th>
-            <th>Architect</th>
-            <th>Jira Link</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-    @foreach (var item in Model.Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.details)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.startDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.dueDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.platform.name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.architect.name)
-            </td>
-            <td>
-                    <a href="https://id.atlassian.com/login?continue=https%3A%2F%2Fid.atlassian.com%2Fjoin%2Fuser-access%3Fresource%3Dari%253Acloud%253Ajira%253A%253Asite%252Fd37da56d-c7f6-4fe8-8ffe-9c086f1ddd89%26continue%3Dhttps%253A%252F%252Faxiangroup.atlassian.net%252Fjira%252Fsoftware%252Fprojects%252FMP%252Fboards%252F29%253Ftext%253Dcnap&application=jira">@Html.DisplayFor(modelItem => item.jiraLink)</a>
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
-            </td>
-        </tr>
-        }
-    </tbody>
-</table>
+@if (isAdmin)
+{
+    <a asp-action="Create" class="btn btn-primary mb-4">Create new project</a>
+}
 
-<div>
-    <ul class="pagination">
-        @if (Model.HasPreviousPage)
-        {
-            <li class="page-item">
-                <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-pageSize="@Model.PageSize">Previous</a>
-            </li>
-        }
-        else
-        {
-            <li class="page-item disabled">
-                <span class="page-link">Previous</span>
-            </li>
-        }
+<div class="row" style="margin-bottom:7%;">
+    <div class="e-table">
+        <div class="table-responsive table-lg mt-3">
+            <table class="table table-bordered table-md">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Name</th>
+                        <th>Details</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Platform</th>
+                        <th>Architect</th>
+                        <th>Jira Link</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model.Model) {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.details)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.startDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.dueDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.platform.name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.architect.name)
+                        </td>
+                        <td>
+                                <a href="https://id.atlassian.com/login?continue=https%3A%2F%2Fid.atlassian.com%2Fjoin%2Fuser-access%3Fresource%3Dari%253Acloud%253Ajira%253A%253Asite%252Fd37da56d-c7f6-4fe8-8ffe-9c086f1ddd89%26continue%3Dhttps%253A%252F%252Faxiangroup.atlassian.net%252Fjira%252Fsoftware%252Fprojects%252FMP%252Fboards%252F29%253Ftext%253Dcnap&application=jira">@Html.DisplayFor(modelItem => item.jiraLink)</a>
+                        </td>
+                        <td style="width: 95px;">
+                                <a asp-action="Edit" asp-route-id="@item.id" class="btn btn-primary btn-sm"><i class="fas fa-pencil"></i></a>
+                                <a asp-action="Details" asp-route-id="@item.id" class="btn btn-secondary btn-sm"><i class="fas fa-eye"></i></a>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div>
+        <ul class="pagination">
+            @if (Model.HasPreviousPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-pageSize="@Model.PageSize">Previous</a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item disabled">
+                    <span class="page-link">Previous</span>
+                </li>
+            }
 
-        @for (var i = 1; i <= Model.TotalPages; i++)
-        {
-            <li class="page-item @(i == Model.PageNumber ? "active" : "")">
-                <a class="page-link" asp-action="Index" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
-            </li>
-        }
+            @for (var i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                </li>
+            }
 
-        @if (Model.HasNextPage)
-        {
-            <li class="page-item">
-                <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
-            </li>
-        }
-        else
-        {
-            <li class="page-item disabled">
-                <span class="page-link">Next</span>
-            </li>
-        }
-    </ul>
+            @if (Model.HasNextPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item disabled">
+                    <span class="page-link">Next</span>
+                </li>
+            }
+        </ul>
+    </div>
 </div>
 
