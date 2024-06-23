@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using ReportMeeting.Data;
 using ReportMeeting.Models;
 using ReportMeeting.Services;
+using Rotativa.AspNetCore;
 
 namespace ReportMeeting.Controllers
 {
@@ -78,13 +79,32 @@ namespace ReportMeeting.Controllers
 
             var tasksList = await _taskService.getListByProject(id);
 
-            if (project == null)
+            var viewModel = new ProjectDetailsModel
             {
-                return NotFound();
-            }
+                Project = project,
+                Tasks = tasksList
+            };
+            
+            return View(viewModel);
+        }
 
-            ViewData["tasks"] = tasksList;
-            return View(project);
+        public async Task<IActionResult> ExportPdf(int id)
+        {
+            var project = await _context.Project.Include(p => p.platform).Include(p => p.architect)
+                .FirstOrDefaultAsync(m => m.id == id);
+
+            var tasksList = await _taskService.getListByProject(id);
+
+            var viewModel = new ProjectDetailsModel
+            {
+                Project = project,
+                Tasks = tasksList
+            };
+
+            return new ViewAsPdf("Details", viewModel)
+            {
+                FileName = "ProjectDetails.pdf"
+            };
         }
 
         // GET: Project/Create

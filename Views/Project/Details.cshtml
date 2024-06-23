@@ -1,10 +1,12 @@
-@model ReportMeeting.Models.Project
+@model ReportMeeting.Models.ProjectDetailsModel
 
 @{
     ViewData["Title"] = "Details";
+    var project = Model.Project;
+    var tasks = Model.Tasks;
 }
 
-<h3>Project : @Html.DisplayFor(model => model.name)</h3>
+<h3>Project : @project.name</h3>
 
 <div class="row" style="margin-bottom:7%;">
     <div class="e-table">
@@ -15,7 +17,7 @@
                         <th>Name</th>
                         <th>Details</th>
                         <th>Start Date</th>
-                        <th>End Date</th>
+                        <th>Due Date</th>
                         <th>Platform</th>
                         <th>Architect</th>
                         <th>Jira Link</th>
@@ -24,26 +26,26 @@
                 <tbody>
                     <tr>
                         <td>
-                            @Html.DisplayFor(model => model.name)
+                            @project.name
                         </td>
                         <td>
-                            @Html.DisplayFor(model => model.details)
+                            @project.details
                         </td>
                         <td>
-                            @Html.DisplayFor(model => model.startDate)
+                            @project.startDate
                         </td>
                         <td>
-                            @Html.DisplayFor(model => model.dueDate)
+                            @project.dueDate
                         </td>
                         <td>
-                            @Html.DisplayFor(model => model.platform.name)
+                            @project.platform.name
                         </td>
                         <td>
-                            @Html.DisplayFor(model => model.architect.name)
+                            @project.architect.name
                         </td>
                         <td>
-                            <a href="https://id.atlassian.com/login?continue=https%3A%2F%2Fid.atlassian.com%2Fjoin%2Fuser-access%3Fresource%3Dari%253Acloud%253Ajira%253A%253Asite%252Fd37da56d-c7f6-4fe8-8ffe-9c086f1ddd89%26continue%3Dhttps%253A%252F%252Faxiangroup.atlassian.net%252Fjira%252Fsoftware%252Fprojects%252FMP%252Fboards%252F29%253Ftext%253Dcnap&application=jira"
-                            >@Html.DisplayFor(model => model.jiraLink)</a>
+                            <a href="https://id.atlassian.com/login?continue=https%3A%2F%2Fid.atlassian.com%2Fjoin%2Fuser-access%3Fresource%3Dari%253Acloud%253Ajira%253A%253Asite%252Fd37da56d-c7f6-4fe8-8ffe-9c086f1ddd89%26continue%3Dhttps%253A%252F%252Faxiangroup.atlassian.net%252Fjira%252Fsoftware%252Fprojects%252FMP%252Fboards%252F29%253Ftext%253Dcnap&application=jira">
+                                @project.jiraLink</a>
                         </td>
                     </tr>
                 </tbody>
@@ -69,61 +71,58 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if (ViewData["tasks"] is IEnumerable<ReportMeeting.Models.Task> tasks)
+                    @foreach (var task in tasks)
                     {
-                        @foreach (var task in tasks)
-                        {
-                            <tr>
-                                <td>@task.name</td>
-                                <td>@task.details</td>
+                        <tr>
+                            <td>@task.name</td>
+                            <td>@task.details</td>
 
-                                <td>
-                                @if(task.files != null)
+                            <td>
+                            @if(task.files != null)
+                            {
+                                <i class="fas fa-file"></i>
+                            }
+                            </td>
+
+                            <td>@task.startDate</td>
+                            <td>@task.dueDate</td>
+                            <td>@task.assignee.name</td>
+                            <td>
+                                @switch (task.status)
                                 {
-                                    <i class="fas fa-file"></i>
+                                    case "In Progress":
+                                        <span class="badge badge-primary">@task.status</span>
+                                        break;
+                                    case "Pending":
+                                        <span class="badge badge-warning">@task.status</span>
+                                        break;
+                                    case "Stand By":
+                                        <span class="badge badge-dark">@task.status</span>
+                                        break;
+                                    case "Not Started":
+                                        <span class="badge badge-danger">@task.status</span>
+                                        break;
+                                    case "Done":
+                                        <span class="badge badge-success">@task.status</span>
+                                        break;
+                                    default:
+                                        <span class="badge badge-secondary">@task.status</span>
+                                        // Default case for other statuses
+                                        break;
                                 }
-                                </td>
-
-                                <td>@task.startDate</td>
-                                <td>@task.dueDate</td>
-                                <td>@task.assignee.name</td>
-                                <td>
-                                    @switch (task.status)
-                                    {
-                                        case "In Progress":
-                                            <span class="badge badge-primary">@task.status</span>
-                                            break;
-                                        case "Pending":
-                                            <span class="badge badge-warning">@task.status</span>
-                                            break;
-                                        case "Stand By":
-                                            <span class="badge badge-dark">@task.status</span>
-                                            break;
-                                        case "Not Started":
-                                            <span class="badge badge-danger">@task.status</span>
-                                            break;
-                                        case "Done":
-                                            <span class="badge badge-success">@task.status</span>
-                                            break;
-                                        default:
-                                            <span class="badge badge-secondary">@task.status</span>
-                                            // Default case for other statuses
-                                            break;
-                                    }
-                                </td>
-                                <td>@task.blockingPoint</td>
-                                <td>
-                                    @if (@task.status != "Done" && @task.assigneeId == ViewBag.User?.id)
-                                    {
-                                        <button class="btn btn-primary btn-sm">Complete</button>
-                                    }
-                                    @if (@task.status == "Done")
-                                    {
-                                        <button class="btn btn-primary btn-sm" disabled style="font-size:12px;">Completed</button>
-                                    }
-                                </td>
-                                </tr>
-                        }
+                            </td>
+                            <td>@task.blockingPoint</td>
+                            <td>
+                                @if (@task.status != "Done" && @task.assigneeId == ViewBag.User?.id)
+                                {
+                                    <button class="btn btn-primary btn-sm">Complete</button>
+                                }
+                                @if (@task.status == "Done")
+                                {
+                                    <button class="btn btn-primary btn-sm" disabled style="font-size:12px;">Completed</button>
+                                }
+                            </td>
+                        </tr>
                     }
                 </tbody>
             </table>
@@ -132,5 +131,6 @@
 
     <div>
         <a asp-action="Index" class="btn btn-light">< Back to List</a>
+        <a asp-action="ExportPdf" asp-route-id="@project.id" class="btn btn-outline-warning">Export PDF</a>
     </div>
 </div>
