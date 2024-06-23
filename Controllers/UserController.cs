@@ -69,11 +69,13 @@ namespace ReportMeeting.Controllers
                 return NotFound();
             }
 
-            var users = await _context.Users.FindAsync(id);
+            var users = await _context.Users.Include(u => u.role).FirstOrDefaultAsync(u => u.id == id);
             if (users == null)
             {
                 return NotFound();
             }
+
+            ViewData["roles"] = _context.Role.ToList();
             return View(users);
         }
 

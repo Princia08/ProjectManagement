@@ -2,20 +2,22 @@
 
 @{
     ViewData["Title"] = "Index";
+    var isAdmin = ViewBag.User.roleId == 4;
 }
 
-<h1>Index</h1>
+<h3 class="mb-4" style="color:darkblue;">List of all role</h3>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
+@if (isAdmin)
+{
+    <a asp-action="Create" class="btn btn-primary mb-4 mt-3">Add new role</a>
+}
+<table class="table table-bordered">
     <thead>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.name)
             </th>
-            <th></th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -25,9 +27,11 @@
                 @Html.DisplayFor(modelItem => item.name)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
+                @if (isAdmin)
+                {
+                    <a asp-action="Edit" asp-route-id="@item.id" class="btn btn-primary btn-sm"><i class="fas fa-pencil"></i></a>
+                        <a asp-action="Delete" asp-route-id="@item.id" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>
+                }
             </td>
         </tr>
 }

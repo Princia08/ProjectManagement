@@ -2,33 +2,35 @@
 
 @{
     ViewData["Title"] = "Index";
+    var isAdmin = ViewBag.User.roleId == 4;
 }
 
-<h1>Index</h1>
+<h3 class="mb-4" style="color:darkblue;">List of all employees and its role</h3>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+@if (isAdmin)
+{
+    <a asp-action="Create" class="btn btn-primary mb-4">Add new employee</a>
+}
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.name)
+                Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.email)
+                Email Address
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.phoneNumber)
+                Phone Number
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.role)
+                Role
             </th>
-            <th></th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+    @foreach (var item in Model) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.name)
@@ -43,11 +45,18 @@
                 @Html.DisplayFor(modelItem => item.role.name)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
-            </td>
+                @if (isAdmin)
+                {
+                    <a asp-action="Edit" asp-route-id="@item.id" class="btn btn-primary btn-sm"><i class="fas fa-pencil"></i></a>
+                    <a asp-action="Delete" asp-route-id="@item.id" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>
+                }
+
+                @if (ViewBag.User.id == item.id && !isAdmin)
+                {
+                    <a asp-action="Edit" asp-route-id="@item.id" class="btn btn-primary btn-sm"><i class="fas fa-pencil"></i></a>
+                }
+                </td>
         </tr>
-}
+    }
     </tbody>
 </table>

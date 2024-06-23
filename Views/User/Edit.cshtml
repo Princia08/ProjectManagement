@@ -2,13 +2,13 @@
 
 @{
     ViewData["Title"] = "Edit";
+    var isAdmin = ViewBag.User.roleId == 4;
 }
 
-<h1>Edit</h1>
+<h3 style="color:darkblue;">Edit @Model.name's informations </h3>
 
-<h4>Users</h4>
 <hr />
-<div class="row">
+<div class="row" style="justify-content: center; margin-bottom:8%;">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -24,29 +24,61 @@
                 <span asp-validation-for="email" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="password" class="control-label"></label>
-                <input asp-for="password" class="form-control" />
+                <label asp-for="password" class="control-label">Password</label>
+                <input asp-for="password" class="form-control" type="password" value="@Model.password"/>
                 <span asp-validation-for="password" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="phoneNumber" class="control-label"></label>
+                <label asp-for="phoneNumber" class="control-label">Phone Number</label>
                 <input asp-for="phoneNumber" class="form-control" />
                 <span asp-validation-for="phoneNumber" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="roleId" class="control-label"></label>
-                <input asp-for="roleId" class="form-control" />
+            <div class="form-group mb-4">
+                <label class="control-label">Role</label>
+
+                @if (isAdmin) {
+                    <select asp-for="roleId" class="form-control" class="form-select" aria-label="Choose role">
+                        @if (ViewData["roles"] is IEnumerable<ReportMeeting.Models.Role> roles)
+                        {
+                            foreach (var role in roles)
+                            {
+                                <option value="@role.id">@role.name</option>
+                            }
+                        }
+                    </select>
+                }
+                else
+                {
+                    <select asp-for="roleId" class="form-control" class="form-select" disabled aria-label="Choose role">
+                        @if (ViewData["roles"] is IEnumerable<ReportMeeting.Models.Role> roles)
+                        {
+                            foreach (var role in roles)
+                            {
+                                <option value="@role.id">@role.name</option>
+                            }
+                        }
+                    </select>
+
+                    <select asp-for="roleId" class="form-control" class="form-select" hidden aria-label="Choose role">
+                        @if (ViewData["roles"] is IEnumerable<ReportMeeting.Models.Role> roleList)
+                        {
+                            foreach (var role in roleList)
+                            {
+                                <option value="@role.id">@role.name</option>
+                            }
+                        }
+                    </select>
+                }
                 <span asp-validation-for="roleId" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">< Back</a>
+                <input type="submit" value="Update" class="btn btn-primary" />
             </div>
+          
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
