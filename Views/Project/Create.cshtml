@@ -4,82 +4,87 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h3 style="color:darkblue;">Create new project</h3>
 
-<h4>Project</h4>
 <hr />
-<div class="row">
+<div class="row" style="justify-content: center">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="name" class="control-label"></label>
+                <label asp-for="name" class="control-label">Name</label>
                 <input asp-for="name" class="form-control" />
                 <span asp-validation-for="name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="details" class="control-label"></label>
-                <input asp-for="details" class="form-control" />
+                <label asp-for="details" class="control-label">Details</label>
+                <textarea asp-for="details" class="form-control"></textarea>
                 <span asp-validation-for="details" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="startDate" class="control-label"></label>
-                <input asp-for="startDate" class="form-control" type="date"/>
-                <span asp-validation-for="startDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="dueDate" class="control-label"></label>
-                <input asp-for="dueDate" class="form-control" type="date" />
-                <span asp-validation-for="dueDate" class="text-danger"></span>
-            </div>
-
-            <div class="form-group mb-4">
-                <label asp-for="platformId" class="control-label"></label>
-
-                <select asp-for="platformId" class="form-control" class="form-select" aria-label="Choose the platform">
-                    <option disabled>Choose the platform</option>
-                    @if (ViewData["platforms"] is IEnumerable<ReportMeeting.Models.Platform> platforms)
-                    {
-                        foreach (var platform in platforms)
-                        {
-                            <option value="@platform.id">@platform.name</option>
-                        }
-                    }
-                </select>
-                <span asp-validation-for="platformId" class="text-danger"></span>
-            </div>
-
-
-            <div class="form-group mb-4">
-                <label asp-for="architect" class="control-label"></label>
-
-                <select asp-for="architectId" class="form-control" class="form-select" aria-label="Choose the architect">
-                    @if (ViewData["architects"] is IEnumerable<ReportMeeting.Models.Users> architects)
-                    {
-                        <option disabled>Choose the architect</option>
-                        foreach (var architect in architects)
-                        {
-                            <option value="@architect.id">@architect.name</option>
-                        }
-                    }
-                </select>
-                <span asp-validation-for="architectId" class="text-danger"></span>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label asp-for="startDate" class="control-label">Start Date</label>
+                        <input asp-for="startDate" class="form-control" type="date"/>
+                        <span asp-validation-for="startDate" class="text-danger"></span>
+                    </div>
+                        <div class="col-md-6">
+                        <label asp-for="dueDate" class="control-label">Due Date</label>
+                        <input asp-for="dueDate" class="form-control" type="date" />
+                        <span asp-validation-for="dueDate" class="text-danger"></span>
+                    </div>
+                </div>
             </div>
 
             <div class="form-group">
-                <label asp-for="jiraLink" class="control-label"></label>
+                <div class="row">
+                    <div class="col-md-6">
+
+                        <label asp-for="platformId" class="control-label">Platform</label>
+
+                        <select asp-for="platformId" class="form-control" class="form-select" aria-label="Choose the platform">
+                            <option disabled selected>Choose platform</option>
+                            @if (ViewData["platforms"] is IEnumerable<ReportMeeting.Models.Platform> platforms)
+                            {
+                                foreach (var platform in platforms)
+                                {
+                                    <option value="@platform.id">@platform.name</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="platformId" class="text-danger"></span>
+                    </div>
+
+
+                    <div class="col-md-6">
+                        <label asp-for="architect" class="control-label">Architect</label>
+
+                        <select asp-for="architectId" class="form-control" class="form-select" aria-label="Choose the architect">
+                            @if (ViewData["architects"] is IEnumerable<ReportMeeting.Models.Users> architects)
+                            {
+                                <option disabled selected>Choose architect</option>
+                                foreach (var architect in architects)
+                                {
+                                    <option value="@architect.id">@architect.name</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="architectId" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="jiraLink" class="control-label">Jira Link</label>
                 <input asp-for="jiraLink" class="form-control" />
                 <span asp-validation-for="jiraLink" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <a asp-action="Index" class="btn btn-secondary">< Back</a>
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
