@@ -4,7 +4,7 @@
     ViewData["Title"] = "Projects List";
 }
 
-<h1>Index</h1>
+<h1>Projects List</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -23,7 +23,7 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Model) {
+    @foreach (var item in Model.Model) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.name)
@@ -44,7 +44,7 @@
                 @Html.DisplayFor(modelItem => item.architect.name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.jiraLink)
+                    <a href="https://id.atlassian.com/login?continue=https%3A%2F%2Fid.atlassian.com%2Fjoin%2Fuser-access%3Fresource%3Dari%253Acloud%253Ajira%253A%253Asite%252Fd37da56d-c7f6-4fe8-8ffe-9c086f1ddd89%26continue%3Dhttps%253A%252F%252Faxiangroup.atlassian.net%252Fjira%252Fsoftware%252Fprojects%252FMP%252Fboards%252F29%253Ftext%253Dcnap&application=jira">@Html.DisplayFor(modelItem => item.jiraLink)</a>
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
@@ -92,3 +92,4 @@
         }
     </ul>
 </div>
+

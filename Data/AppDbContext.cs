@@ -9,6 +9,7 @@ namespace ReportMeeting.Data
         public DbSet<Users> Users { get; set; }
         public DbSet<Role> Role { get; set; }
         public DbSet<Project> Project { get; set; }
+        public DbSet<Models.Task> Task { get; set; }
         public DbSet<Platform> Platform { get; set; }
     }
 }

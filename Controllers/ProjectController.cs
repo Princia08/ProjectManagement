@@ -8,16 +8,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ReportMeeting.Data;
 using ReportMeeting.Models;
+using ReportMeeting.Services;
 
 namespace ReportMeeting.Controllers
 {
     public class ProjectController : BaseController
     {
         private readonly AppDbContext _context;
+        private readonly TaskService _taskService;
 
-        public ProjectController(AppDbContext context)
+        public ProjectController(AppDbContext context, TaskService taskService)
         {
             _context = context;
+            _taskService = taskService;
         }
 
         // GET: Project
@@ -29,11 +32,26 @@ namespace ReportMeeting.Controllers
             // Calculate the total number of pages
             var totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
 
-            // Fetch the paginated data
-            var projects = await _context.Project.Include(p => p.platform).Include(p => p.architect)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+            var user = HttpContext.Session.GetObject<Users>("User");
+
+            var projects = new List<Project>();
+            // if admin then show all list, else show only list according to user 
+            if (user.roleId == 4)
+            {
+                // Fetch the paginated data
+                projects = await _context.Project.Include(p => p.platform).Include(p => p.architect)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+            }
+            else
+            {
+                // Fetch the paginated data
+                projects = await _context.Project.Include(p => p.platform).Include(p => p.architect).Where(p => p.architectId == user.id)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+            }
 
             // Create a view model to pass the data and pagination details to the view
             var viewModel = new PaginationModel<Project>
@@ -58,11 +76,14 @@ namespace ReportMeeting.Controllers
             var project = await _context.Project.Include(p => p.platform).Include(p => p.architect)
                 .FirstOrDefaultAsync(m => m.id == id);
 
+            var tasksList = await _taskService.getListByProject(id);
+
             if (project == null)
             {
                 return NotFound();
             }
 
+            ViewData["tasks"] = tasksList;
             return View(project);
         }
 

@@ -166,7 +166,7 @@ namespace ReportMeeting.Controllers
             {
                 HttpContext.Session.SetObject<Users>("User", userFound);
                 ViewBag.User = user;
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Project");
             }
         }
 
