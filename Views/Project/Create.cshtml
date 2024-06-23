@@ -39,9 +39,7 @@
             <div class="form-group">
                 <div class="row">
                     <div class="col-md-6">
-
                         <label asp-for="platformId" class="control-label">Platform</label>
-
                         <select asp-for="platformId" class="form-control" class="form-select" aria-label="Choose the platform">
                             <option disabled selected>Choose platform</option>
                             @if (ViewData["platforms"] is IEnumerable<ReportMeeting.Models.Platform> platforms)
@@ -58,7 +56,6 @@
 
                     <div class="col-md-6">
                         <label asp-for="architect" class="control-label">Architect</label>
-
                         <select asp-for="architectId" class="form-control" class="form-select" aria-label="Choose the architect">
                             @if (ViewData["architects"] is IEnumerable<ReportMeeting.Models.Users> architects)
                             {

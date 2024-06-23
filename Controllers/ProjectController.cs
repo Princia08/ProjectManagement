@@ -144,6 +144,10 @@ namespace ReportMeeting.Controllers
             {
                 return NotFound();
             }
+
+            ViewData["architects"] = _context.Users.Where(a => a.role.name == "architect").ToList();
+            ViewData["platforms"] = _context.Platform.ToList();
+            
             return View(project);
         }
 
