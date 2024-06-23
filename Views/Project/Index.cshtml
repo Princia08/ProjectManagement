@@ -1,7 +1,7 @@
-@model IEnumerable<ReportMeeting.Models.Project>
+@model PaginationModel<Project>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Projects List";
 }
 
 <h1>Index</h1>
@@ -12,32 +12,18 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.details)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.startDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.dueDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.platform)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.architect)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.jiraLink)
-            </th>
+            <th>Name</th>
+            <th>Details</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Platform</th>
+            <th>Architect</th>
+            <th>Jira Link</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.Model) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.name)
@@ -66,6 +52,43 @@
                 <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
             </td>
         </tr>
-}
+        }
     </tbody>
 </table>
+
+<div>
+    <ul class="pagination">
+        @if (Model.HasPreviousPage)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-pageSize="@Model.PageSize">Previous</a>
+            </li>
+        }
+        else
+        {
+            <li class="page-item disabled">
+                <span class="page-link">Previous</span>
+            </li>
+        }
+
+        @for (var i = 1; i <= Model.TotalPages; i++)
+        {
+            <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                <a class="page-link" asp-action="Index" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+            </li>
+        }
+
+        @if (Model.HasNextPage)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
+            </li>
+        }
+        else
+        {
+            <li class="page-item disabled">
+                <span class="page-link">Next</span>
+            </li>
+        }
+    </ul>
+</div>

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -20,9 +21,30 @@ namespace ReportMeeting.Controllers
         }
 
         // GET: Project
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 8)
         {
-            return View(await _context.Project.Include(p => p.platform).Include(p => p.architect).ToListAsync());
+            // Calculate the total number of records
+            var totalRecords = await _context.Project.CountAsync();
+
+            // Calculate the total number of pages
+            var totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+
+            // Fetch the paginated data
+            var projects = await _context.Project.Include(p => p.platform).Include(p => p.architect)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            // Create a view model to pass the data and pagination details to the view
+            var viewModel = new PaginationModel<Project>
+            {
+                Model = projects,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalPages = totalPages
+            };
+
+            return View(viewModel);
         }
 
         // GET: Project/Details/5
