@@ -7,8 +7,10 @@
         public string details { get; set; }
         public DateOnly startDate { get; set; }
         public DateOnly dueDate { get; set; }
+        public int platformId { get; set; }
+        public int architectId { get; set; }
         public string jiraLink { get; set; }
-        public string platformConcerned { get; set; }
-        public int architect_id { get; set; }
+        public Platform platform { get; set; }
+        public Users architect {  get; set; }
     }
 }

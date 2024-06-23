@@ -10,22 +10,22 @@ using ReportMeeting.Models;
 
 namespace ReportMeeting.Controllers
 {
-    public class RoleController : BaseController
+    public class ProjectController : BaseController
     {
         private readonly AppDbContext _context;
 
-        public RoleController(AppDbContext context)
+        public ProjectController(AppDbContext context)
         {
             _context = context;
         }
 
-        // GET: Role
+        // GET: Project
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Role.ToListAsync());
+            return View(await _context.Project.Include(p => p.platform).Include(p => p.architect).ToListAsync());
         }
 
-        // GET: Role/Details/5
+        // GET: Project/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,39 +33,42 @@ namespace ReportMeeting.Controllers
                 return NotFound();
             }
 
-            var role = await _context.Role
+            var project = await _context.Project.Include(p => p.platform).Include(p => p.architect)
                 .FirstOrDefaultAsync(m => m.id == id);
-            if (role == null)
+
+            if (project == null)
             {
                 return NotFound();
             }
 
-            return View(role);
+            return View(project);
         }
 
-        // GET: Role/Create
+        // GET: Project/Create
         public IActionResult Create()
         {
+            ViewData["architects"] = _context.Users.Where(a => a.role.name == "architect").ToList();
+            ViewData["platforms"] = _context.Platform.ToList();
             return View();
         }
 
-        // POST: Role/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,name")] Role role)
+        public async Task<IActionResult> Create([Bind("id,name,details,startDate,dueDate,platformId,architectId,jiraLink")] Project project)
         {
+            ModelState.Remove(nameof(project.platform));
+            ModelState.Remove(nameof(project.architect));
+
             if (ModelState.IsValid)
             {
-                _context.Add(role);
+                _context.Add(project);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(role);
+            return View(project);
         }
 
-        // GET: Role/Edit/5
+        // GET: Project/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,36 +76,37 @@ namespace ReportMeeting.Controllers
                 return NotFound();
             }
 
-            var role = await _context.Role.FindAsync(id);
-            if (role == null)
+            var project = await _context.Project.FindAsync(id);
+            if (project == null)
             {
                 return NotFound();
             }
-            return View(role);
+            return View(project);
         }
 
-        // POST: Role/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Project/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,name")] Role role)
+        public async Task<IActionResult> Edit(int id, [Bind("id,name,details,startDate,dueDate,platformId,architectId,jiraLink")] Project project)
         {
-            if (id != role.id)
+            if (id != project.id)
             {
                 return NotFound();
             }
+
+            ModelState.Remove(nameof(project.platform));
+            ModelState.Remove(nameof(project.architect));
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(role);
+                    _context.Update(project);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!RoleExists(role.id))
+                    if (!ProjectExists(project.id))
                     {
                         return NotFound();
                     }
@@ -113,10 +117,10 @@ namespace ReportMeeting.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(role);
+            return View(project);
         }
 
-        // GET: Role/Delete/5
+        // GET: Project/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -124,34 +128,34 @@ namespace ReportMeeting.Controllers
                 return NotFound();
             }
 
-            var role = await _context.Role
+            var project = await _context.Project.Include(p => p.platform).Include(p => p.architect)
                 .FirstOrDefaultAsync(m => m.id == id);
-            if (role == null)
+            if (project == null)
             {
                 return NotFound();
             }
 
-            return View(role);
+            return View(project);
         }
 
-        // POST: Role/Delete/5
+        // POST: Project/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var role = await _context.Role.FindAsync(id);
-            if (role != null)
+            var project = await _context.Project.FindAsync(id);
+            if (project != null)
             {
-                _context.Role.Remove(role);
+                _context.Project.Remove(project);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool RoleExists(int id)
+        private bool ProjectExists(int id)
         {
-            return _context.Role.Any(e => e.id == id);
+            return _context.Project.Any(e => e.id == id);
         }
     }
 }

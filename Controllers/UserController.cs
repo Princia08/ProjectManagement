@@ -18,7 +18,7 @@ namespace ReportMeeting.Controllers
         // GET: User
         public async Task<IActionResult> Index()
         {
-            return View(await _context.users.Include(u => u.role).ToListAsync());
+            return View(await _context.Users.Include(u => u.role).ToListAsync());
         }
 
         // GET: User/Details/5
@@ -29,7 +29,7 @@ namespace ReportMeeting.Controllers
                 return NotFound();
             }
 
-            var users = await _context.users.Include(u => u.role)
+            var users = await _context.Users.Include(u => u.role)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (users == null)
             {
@@ -42,7 +42,7 @@ namespace ReportMeeting.Controllers
         // GET: User/Create
         public async Task<IActionResult> Create()
         {
-            ViewData["roles"] = _context.role.ToList(); 
+            ViewData["roles"] = _context.Role.ToList(); 
             return View();
         }
 
@@ -69,7 +69,7 @@ namespace ReportMeeting.Controllers
                 return NotFound();
             }
 
-            var users = await _context.users.FindAsync(id);
+            var users = await _context.Users.FindAsync(id);
             if (users == null)
             {
                 return NotFound();
@@ -85,6 +85,7 @@ namespace ReportMeeting.Controllers
             {
                 return NotFound();
             }
+            ModelState.Remove(nameof(users.role));
 
             if (ModelState.IsValid)
             {
@@ -117,7 +118,7 @@ namespace ReportMeeting.Controllers
                 return NotFound();
             }
 
-            var users = await _context.users.Include(u => u.role)
+            var users = await _context.Users.Include(u => u.role)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (users == null)
             {
@@ -132,10 +133,10 @@ namespace ReportMeeting.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var users = await _context.users.FindAsync(id);
+            var users = await _context.Users.FindAsync(id);
             if (users != null)
             {
-                _context.users.Remove(users);
+                _context.Users.Remove(users);
             }
 
             await _context.SaveChangesAsync();
@@ -144,7 +145,7 @@ namespace ReportMeeting.Controllers
 
         private bool UsersExists(int id)
         {
-            return _context.users.Any(e => e.id == id);
+            return _context.Users.Any(e => e.id == id);
         }
 
         public IActionResult Login()
@@ -155,7 +156,7 @@ namespace ReportMeeting.Controllers
         [HttpPost]
         public async Task<IActionResult> Authentificate([Bind("email,password")] Users user)
         {
-            var userFound = await _context.users.Where(u => u.email == user.email && u.password == user.password).FirstOrDefaultAsync();
+            var userFound = await _context.Users.Where(u => u.email == user.email && u.password == user.password).FirstOrDefaultAsync();
             if (userFound == null)
             {
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
