@@ -71,7 +71,7 @@ namespace ReportMeeting.Controllers
                 Project = project,
                 Tasks = tasksList
             };
-
+            
             return new ViewAsPdf("Details", viewModel)
             {
                 FileName = project.name+".pdf"

@@ -4,7 +4,6 @@
     ViewData["Title"] = "Details";
     var project = Model.Project;
     var tasks = Model.Tasks;
-    var isAdmin = ViewBag.User.roleId == 4;
 }
 
 <h3>Project : @project.name</h3>
@@ -55,7 +54,7 @@
     </div>
     
     <h4 style="color:darkblue">Tasks for this project</h4>
-    @if (isAdmin)
+    @if (ViewBag?.User?.roleId == 4)
     {
         <div class="col-md-6">
             <a asp-action="Create" asp-controller="Task" asp-route-projectId="@project.id" class="btn btn-primary mb-2 mt-2">Create new task</a>
