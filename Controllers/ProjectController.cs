@@ -17,51 +17,22 @@ namespace ReportMeeting.Controllers
     {
         private readonly AppDbContext _context;
         private readonly TaskService _taskService;
-
-        public ProjectController(AppDbContext context, TaskService taskService)
+        private readonly ProjectService _projectService;
+        
+        public ProjectController(AppDbContext context, TaskService taskService, IConfiguration configuration)
         {
             _context = context;
             _taskService = taskService;
+            string connectionString = configuration.GetConnectionString("ReportingAppContext");
+            _projectService = new ProjectService(connectionString);
         }
 
         // GET: Project
         public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 8)
         {
-            // Calculate the total number of records
-            var totalRecords = await _context.Project.CountAsync();
-
-            // Calculate the total number of pages
-            var totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
-
             var user = HttpContext.Session.GetObject<Users>("User");
-
-            var projects = new List<Project>();
-            // if admin then show all list, else show only list according to user 
-            if (user.roleId == 4)
-            {
-                // Fetch the paginated data
-                projects = await _context.Project.Include(p => p.platform).Include(p => p.architect)
-                    .Skip((pageNumber - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToListAsync();
-            }
-            else
-            {
-                // Fetch the paginated data
-                projects = await _context.Project.Include(p => p.platform).Include(p => p.architect).Where(p => p.architectId == user.id)
-                    .Skip((pageNumber - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToListAsync();
-            }
-
-            // Create a view model to pass the data and pagination details to the view
-            var viewModel = new PaginationModel<Project>
-            {
-                Model = projects,
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                TotalPages = totalPages
-            };
+            // Call the ProjectService to get projects
+            var viewModel = await _projectService.GetProjectsAsync(pageNumber, pageSize, user);
 
             return View(viewModel);
         }
@@ -103,7 +74,7 @@ namespace ReportMeeting.Controllers
 
             return new ViewAsPdf("Details", viewModel)
             {
-                FileName = "ProjectDetails.pdf"
+                FileName = project.name+".pdf"
             };
         }
 

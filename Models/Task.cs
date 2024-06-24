@@ -1,4 +1,6 @@
-﻿namespace ReportMeeting.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ReportMeeting.Models
 {
     public class Task
     {
@@ -13,5 +15,7 @@
         public string status { get; set; }
         public string? blockingPoint { get; set; }
         public Users assignee {  get; set; }
+        [NotMapped]
+        public IFormFile? file { get; set; }
     }
 }

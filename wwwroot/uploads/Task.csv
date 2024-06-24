@@ -1,0 +1,9 @@
+Task ID;Task Name;Task Description;File;Start Date;End Date;Priority;Assignee ID;Status;Comments
+15;Database Optimization;Optimize database queries for better performance;db_optimization.pdf;2024-06-01;2024-06-10;11;1;In Progress;Waiting for DBA review
+16;Load Balancing;Implement load balancing across servers;load_balancing.pdf;2024-06-05;2024-06-20;11;1;Not Started;Dependency on hardware setup
+17;Code Refactoring;Refactor code to improve efficiency;NULL;2024-06-08;2024-06-18;11;3;Pending;NULL
+18;Monitoring Setup;Set up monitoring tools to track performance;NULL;2024-06-10;2024-06-25;11;4;In Progress;NULL
+19;Scalability Testing;Conduct scalability testing to ensure improvements;NULL;2024-06-15;2024-06-30;11;1;Done;Dependent on load balancing completion
+21;Database Optimization;Optimize database queries for better performance;db_optimization.pdf;2024-06-01;2024-06-10;5;1;Not Started;NULL
+22;test;test;NULL;2020-05-12;2024-10-12;11;1;Done;NULL
+23;test;test;ProjectDetails.pdf;2020-05-12;2024-10-12;11;1;Pending;NULL

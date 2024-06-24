@@ -3,11 +3,12 @@
 @{
     ViewData["Title"] = "Projects List";
     var isAdmin = ViewBag.User.roleId == 4;
+    var isArchitect = ViewBag.User.roleId == 3;
 }
 
 <h3 class="mb-4" style="color:darkblue;">List of all projects and its tasks</h3>
 
-@if (isAdmin)
+@if (isAdmin || isArchitect)
 {
     <a asp-action="Create" class="btn btn-primary mb-4">Create new project</a>
 }
@@ -53,7 +54,10 @@
                                 <a href="https://id.atlassian.com/login?continue=https%3A%2F%2Fid.atlassian.com%2Fjoin%2Fuser-access%3Fresource%3Dari%253Acloud%253Ajira%253A%253Asite%252Fd37da56d-c7f6-4fe8-8ffe-9c086f1ddd89%26continue%3Dhttps%253A%252F%252Faxiangroup.atlassian.net%252Fjira%252Fsoftware%252Fprojects%252FMP%252Fboards%252F29%253Ftext%253Dcnap&application=jira">@Html.DisplayFor(modelItem => item.jiraLink)</a>
                         </td>
                         <td style="width: 95px;">
-                                <a asp-action="Edit" asp-route-id="@item.id" class="btn btn-primary btn-sm"><i class="fas fa-pencil"></i></a>
+                                @if (isAdmin || isArchitect)
+                                {
+                                    <a asp-action="Edit" asp-route-id="@item.id" class="btn btn-primary btn-sm"><i class="fas fa-pencil"></i></a>
+                                }
                                 <a asp-action="Details" asp-route-id="@item.id" class="btn btn-secondary btn-sm"><i class="fas fa-eye"></i></a>
                         </td>
                     </tr>
