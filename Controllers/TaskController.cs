@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -16,10 +17,10 @@ namespace ReportMeeting.Controllers
         private readonly AppDbContext _context;
         private readonly TaskService _taskService;
 
-        public TaskController(AppDbContext context, TaskService taskService)
+        public TaskController(AppDbContext context, IConfiguration configuration)
         {
             _context = context;
-            _taskService = taskService;
+            _taskService = new TaskService(configuration.GetConnectionString("ReportingAppContext"));
         }
 
         // GET: Task

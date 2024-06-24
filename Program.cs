@@ -7,7 +7,6 @@ using System.Configuration;
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ReportingAppContext")));
-builder.Services.AddScoped<TaskService>();
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
 

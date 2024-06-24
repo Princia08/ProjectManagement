@@ -19,11 +19,11 @@ namespace ReportMeeting.Controllers
         private readonly TaskService _taskService;
         private readonly ProjectService _projectService;
         
-        public ProjectController(AppDbContext context, TaskService taskService, IConfiguration configuration)
+        public ProjectController(AppDbContext context, IConfiguration configuration)
         {
             _context = context;
-            _taskService = taskService;
             string connectionString = configuration.GetConnectionString("ReportingAppContext");
+            _taskService = new TaskService(connectionString);
             _projectService = new ProjectService(connectionString);
         }
 
