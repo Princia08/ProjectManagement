@@ -84,7 +84,7 @@ namespace ReportMeeting.Controllers
             {
                 return NotFound();
             }
-            ViewData["assigneeId"] = new SelectList(_context.Users, "id", "id", task.assigneeId);
+            ViewData["assignee"] = new SelectList(_context.Users, "id", "name", task.assigneeId);
             return View(task);
         }
 
@@ -117,10 +117,9 @@ namespace ReportMeeting.Controllers
                 catch (DbUpdateConcurrencyException)
                 {
                 }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["assigneeId"] = new SelectList(_context.Users, "id", "id", task.assigneeId);
-            return View(task);
+            }        
+
+            return RedirectToAction(nameof(Details), "Project", new { id = task.projectId });
         }
 
         // GET: Task/Delete/5
