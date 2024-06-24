@@ -7,16 +7,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ReportMeeting.Data;
 using ReportMeeting.Models;
+using ReportMeeting.Services;
 
 namespace ReportMeeting.Controllers
 {
     public class TaskController : BaseController
     {
         private readonly AppDbContext _context;
+        private readonly TaskService _taskService;
 
-        public TaskController(AppDbContext context)
+        public TaskController(AppDbContext context, TaskService taskService)
         {
             _context = context;
+            _taskService = taskService;
         }
 
         // GET: Task
@@ -160,6 +163,18 @@ namespace ReportMeeting.Controllers
         private bool TaskExists(int id)
         {
             return _context.Task.Any(e => e.id == id);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<Models.Task>>> List(int? projectId)
+        {
+            var project = await _context.Project.FindAsync(projectId);
+            if (project == null)
+            {
+                return NotFound("Project doesn't exist");
+            }
+            var tasksList = await _taskService.getListByProject(projectId);
+            return Ok(tasksList);
         }
     }
 }

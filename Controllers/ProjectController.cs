@@ -31,6 +31,7 @@ namespace ReportMeeting.Controllers
         public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 8)
         {
             var user = HttpContext.Session.GetObject<Users>("User");
+            
             // Call the ProjectService to get projects
             var viewModel = await _projectService.GetProjectsAsync(pageNumber, pageSize, user);
 
@@ -194,6 +195,21 @@ namespace ReportMeeting.Controllers
         private bool ProjectExists(int id)
         {
             return _context.Project.Any(e => e.id == id);
+        }
+
+        // REST API
+        [HttpGet]
+        public async Task<ActionResult<PaginationModel<Project>>> List(int userId, int pageNumber = 1, int pageSize = 8)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+            {
+                return NotFound("User not found"); 
+            }
+            // Call the ProjectService to get projects
+            var viewModel = await _projectService.GetProjectsAsync(pageNumber, pageSize, user);
+
+            return Ok(viewModel);
         }
     }
 }
