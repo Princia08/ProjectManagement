@@ -10,7 +10,7 @@ using ReportMeeting.Models;
 
 namespace ReportMeeting.Controllers
 {
-    public class TaskController : Controller
+    public class TaskController : BaseController
     {
         private readonly AppDbContext _context;
 
@@ -46,15 +46,17 @@ namespace ReportMeeting.Controllers
         }
 
         // GET: Task/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create(int projectId)
         {
-            ViewData["assigneeId"] = new SelectList(_context.Users, "id", "id");
+            var users = await _context.Users.Where(u => u.roleId != 3 && u.roleId != 4).ToListAsync();
+            ViewData["assigneeId"] = new SelectList(users, "id", "name");
+            ViewData["projectId"] = projectId;
+
+            var project = await _context.Project.FindAsync(projectId);
+            ViewData["projectName"] = project.name;
             return View();
         }
 
-        // POST: Task/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id,name,details,files,startDate,dueDate,projectId,assigneeId,status,blockingPoint")] Models.Task task)
@@ -65,10 +67,8 @@ namespace ReportMeeting.Controllers
             {
                 _context.Add(task);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
             }
-            ViewData["assigneeId"] = new SelectList(_context.Users, "id", "id", task.assigneeId);
-            return View(task);
+            return RedirectToAction(nameof(Details), "Project", new { id = task.projectId });
         }
 
         // GET: Task/Edit/5
@@ -84,7 +84,8 @@ namespace ReportMeeting.Controllers
             {
                 return NotFound();
             }
-            ViewData["assignee"] = new SelectList(_context.Users, "id", "name", task.assigneeId);
+            var users = await _context.Users.Where(u => u.roleId != 3 && u.roleId != 4).ToListAsync();
+            ViewData["assignee"] = new SelectList(users, "id", "name");
             return View(task);
         }
 
