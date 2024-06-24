@@ -2,70 +2,69 @@
 
 @{
     ViewData["Title"] = "Create";
+    var projectId = ViewData["projectId"];
+    var projectName = ViewData["projectName"];
 }
 
-<h1>Create</h1>
+<h3 style="color:darkblue;">Create new task for @projectName</h3>
 
-<h4>Task</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+<form asp-action="Create">
+    <div class="row" style="justify-content: center; margin-bottom:8%;">
+        <div class="col-md-6">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="name" class="control-label"></label>
+                <label asp-for="name" class="control-label">Task Name</label>
                 <input asp-for="name" class="form-control" />
                 <span asp-validation-for="name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="details" class="control-label"></label>
-                <input asp-for="details" class="form-control" />
+                <label asp-for="details" class="control-label">Details</label>
+                <textarea asp-for="details" class="form-control"></textarea>
                 <span asp-validation-for="details" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="files" class="control-label"></label>
-                <input asp-for="files" class="form-control" />
-                <span asp-validation-for="files" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="startDate" class="control-label"></label>
-                <input asp-for="startDate" class="form-control" />
+                <label asp-for="startDate" class="control-label">Start Date</label>
+                <input asp-for="startDate" class="form-control" type="date"/>
                 <span asp-validation-for="startDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="dueDate" class="control-label"></label>
-                <input asp-for="dueDate" class="form-control" />
+                <label asp-for="dueDate" class="control-label">End Date</label>
+                <input asp-for="dueDate" class="form-control" type="date" />
                 <span asp-validation-for="dueDate" class="text-danger"></span>
             </div>
+        </div>
+        <div class="col-md-6">
+           
+            <input asp-for="projectId" class="form-control" hidden />
             <div class="form-group">
-                <label asp-for="projectId" class="control-label"></label>
-                <input asp-for="projectId" class="form-control" />
-                <span asp-validation-for="projectId" class="text-danger"></span>
+                <label asp-for="assigneeId" class="control-label">Assignee</label>
+                <select asp-for="assigneeId" class ="form-control" asp-items="ViewBag.assigneeId">
+                    <option selected disabled>Choose an employee</option>
+                </select>
             </div>
             <div class="form-group">
-                <label asp-for="assigneeId" class="control-label"></label>
-                <select asp-for="assigneeId" class ="form-control" asp-items="ViewBag.assigneeId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="status" class="control-label"></label>
-                <input asp-for="status" class="form-control" />
+                <label asp-for="status" class="control-label">Status</label>
+                <select asp-for="status" class="form-control">
+                    <option value="Not Started">Not Started</option>
+                    <option value="Pending">Pending</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Done">Done</option>
+                </select>
                 <span asp-validation-for="status" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="blockingPoint" class="control-label"></label>
-                <input asp-for="blockingPoint" class="form-control" />
+                <label asp-for="blockingPoint" class="control-label">Blocking Point</label>
+                <textarea asp-for="blockingPoint" class="form-control"></textarea>
                 <span asp-validation-for="blockingPoint" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group" style="margin-top:48px;">
+                <a asp-action="Details" asp-controller="Project" asp-route-id="@projectId" class="btn btn-secondary">< Back</a>
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
-        </form>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+</form>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
