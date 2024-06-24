@@ -80,7 +80,9 @@
                             <td>
                             @if(task.files != null)
                             {
-                                <i class="fas fa-file"></i>
+                                    <a href="@Url.Content($"~/uploads/{task.files}")" target="_blank">
+                                        <i class="fas fa-file"></i> @task.files
+                                    </a>
                             }
                             </td>
 
@@ -115,7 +117,7 @@
                             <td>
                                 @if (@task.status != "Done" && @task.assigneeId == ViewBag.User?.id)
                                 {
-                                    <button class="btn btn-primary btn-sm">Complete</button>
+                                    <a class="btn btn-primary btn-sm" asp-action="Edit" asp-controller="Task" asp-route-id="@task.id">Complete</a>
                                 }
                                 @if (@task.status == "Done")
                                 {
